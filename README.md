@@ -17,9 +17,9 @@ Clone this repository to modules folder of your Group-Office installation
 
 And install it in modules
 
-TODO
+ToDo
 ----
 
-* Make it minimal working
+* Counting tickets in category and status grids
+* Change history
 * Add email announcements on status change
-

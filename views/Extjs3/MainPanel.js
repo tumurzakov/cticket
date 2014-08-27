@@ -124,7 +124,7 @@ GO.cticket.MainPanel = function(config){
 			},
 			scope: this
 		},{
-			iconCls: 'no-btn-categories',
+			iconCls: 'ct-btn-categories',
 			text: GO.cticket.lang.manageCategories,
 			cls: 'x-btn-text-icon',
 			handler: function(){
@@ -140,7 +140,7 @@ GO.cticket.MainPanel = function(config){
 			},
 			scope: this
 		},{
-			iconCls: 'no-btn-statuses',
+			iconCls: 'ct-btn-statuses',
 			text: GO.cticket.lang.manageStatuses,
 			cls: 'x-btn-text-icon',
 			handler: function(){

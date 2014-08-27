@@ -1,15 +1,19 @@
-.go-module-icon-notes , .go-menu-icon-notes{
-	background:url('images/notes.png');
+.go-module-icon-cticket , .go-menu-icon-cticket{
+	background:url('images/ticket.png');
 }
 
-.go-tab-icon-notes {
+.go-tab-icon-cticket {
 	background-image: none !important;
 }
 
-.go-model-icon-GO_Notes_Model_Note{
-	background-image: url('images/notes.png') !important;
+.go-model-icon-GO_Cticket_Model_Ticket{
+	background-image: url('images/ticket.png') !important;
 }
 
-.no-btn-categories{
+.ct-btn-categories{
+	background-image: url('images/gtk-settings.png') !important;
+}
+
+.ct-btn-statuses{
 	background-image: url('images/gtk-settings.png') !important;
 }

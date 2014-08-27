@@ -18,7 +18,6 @@ GO.cticket.CticketGrid = function(config){
 		config = {};
 	}
 	
-	config.title = GO.cticket.lang.tickets;
 	config.layout='fit';
 	config.autoScroll=true;
 	config.split=true;
@@ -27,7 +26,7 @@ GO.cticket.CticketGrid = function(config){
 		root: 'results',
 		id: 'id',
 		totalProperty:'total',
-		fields: ['id','category_id','status_id','user_name','ctime','mtime','name','content'],
+		fields: ['id','category','status','user_name','ctime','mtime','name','content'],
 		remoteSort: true,
 		model:"GO_Cticket_Model_Ticket"
 	});
@@ -51,12 +50,12 @@ GO.cticket.CticketGrid = function(config){
 		},
 		{
 			header: GO.cticket.lang.category,
-			dataIndex: 'category_id',
+			dataIndex: 'category',
 			sortable: true
 		},
 		{
 			header: GO.cticket.lang.status,
-			dataIndex: 'status_id',
+			dataIndex: 'status',
 			sortable: true
 		},
 		{

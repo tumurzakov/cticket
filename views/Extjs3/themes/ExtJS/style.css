@@ -1,10 +1,14 @@
-.go-module-icon-notes , .go-menu-icon-notes , .go-tab-icon-notes {
-	background-image:url('images/notes.png') !important;
+.go-module-icon-cticket , .go-menu-icon-cticket , .go-tab-icon-cticket {
+	background-image:url('images/ticket.png') !important;
 }
 .go-link-icon-4 {
-	background-image: url('images/notes.png') !important;
+	background-image: url('images/ticket.png') !important;
 }
 
-.no-btn-categories{
+.ct-btn-categories{
+	background-image: url('images/categories.png') !important;
+}
+
+.ct-btn-statuses{
 	background-image: url('images/categories.png') !important;
 }

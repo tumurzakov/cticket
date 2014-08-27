@@ -50,9 +50,11 @@ class GO_Cticket_Controller_Ticket extends GO_Base_Controller_AbstractModelContr
 	}
 
 	protected function remoteComboFields(){
-		return array('category_id'=>'$model->category->name');
+		return array(
+            'category_id'=>'$model->category->name',
+            'status_id'=>'$model->status->name'
+        );
 	}
-	
 	
 	protected function afterSubmit(&$response, &$model, &$params, $modifiedAttributes) {		
 		 if(GO::modules()->files){
@@ -61,4 +63,11 @@ class GO_Cticket_Controller_Ticket extends GO_Base_Controller_AbstractModelContr
 		 }		
 		return parent::afterSubmit($response, $model, $params, $modifiedAttributes);
 	}
+
+	public function formatStoreRecord($record, $model, $store) {
+		$record['category'] = $model->category->name;
+		$record['status'] = $model->status->name;
+
+		return parent::formatStoreRecord($record, $model, $store);
+    }
 }
