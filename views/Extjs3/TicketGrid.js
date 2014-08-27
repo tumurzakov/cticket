@@ -6,33 +6,30 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: NotesGrid.js 14816 2013-05-21 08:31:20Z mschering $
+ * @version $Id: CticketGrid.js 14816 2013-05-21 08:31:20Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
  
-GO.notes.NotesGrid = function(config){
+GO.cticket.CticketGrid = function(config){
 	
 	if(!config)
 	{
 		config = {};
 	}
-
-
-
 	
-	config.title = GO.notes.lang.notes;
+	config.title = GO.cticket.lang.tickets;
 	config.layout='fit';
 	config.autoScroll=true;
 	config.split=true;
 	config.store = new GO.data.JsonStore({
-		url: GO.url('notes/note/store'),		
+		url: GO.url('cticket/ticket/store'),		
 		root: 'results',
 		id: 'id',
 		totalProperty:'total',
-		fields: ['id','category_id','user_name','ctime','mtime','name','content'],
+		fields: ['id','category_id','status_id','user_name','ctime','mtime','name','content'],
 		remoteSort: true,
-		model:"GO_Notes_Model_Note"
+		model:"GO_Cticket_Model_Ticket"
 	});
 
 	config.store.on('load', function()
@@ -50,6 +47,16 @@ GO.notes.NotesGrid = function(config){
 		{
 			header: GO.lang.strName,
 			dataIndex: 'name',
+			sortable: true
+		},
+		{
+			header: GO.cticket.lang.category,
+			dataIndex: 'category_id',
+			sortable: true
+		},
+		{
+			header: GO.cticket.lang.status,
+			dataIndex: 'status_id',
 			sortable: true
 		},
 		{
@@ -85,11 +92,10 @@ GO.notes.NotesGrid = function(config){
 		    	
 	config.tbar = [GO.lang['strSearch'] + ':', this.searchField];
 	
-	GO.notes.NotesGrid.superclass.constructor.call(this, config);
+	GO.cticket.CticketGrid.superclass.constructor.call(this, config);
 };
 
 
-Ext.extend(GO.notes.NotesGrid, GO.grid.GridPanel,{
+Ext.extend(GO.cticket.CticketGrid, GO.grid.GridPanel,{
 	
-
-	});
+});

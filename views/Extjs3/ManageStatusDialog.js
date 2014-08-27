@@ -6,12 +6,12 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: ManageCategoryDialog.js 14816 2013-05-21 08:31:20Z mschering $
+ * @version $Id: ManageStatusDialog.js 14816 2013-05-21 08:31:20Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
  
-GO.cticket.ManageCategoriesDialog = function(config){
+GO.cticket.ManageStatusesDialog = function(config){
 	
 	
 	if(!config)
@@ -19,7 +19,7 @@ GO.cticket.ManageCategoriesDialog = function(config){
 		config={};
 	}
 		
-	this.categoriesGrid = new GO.cticket.ManageCategoriesGrid();
+	this.statusesGrid = new GO.cticket.ManageStatusesGrid();
 
 	config.maximizable=true;
 	config.layout='fit';
@@ -28,8 +28,8 @@ GO.cticket.ManageCategoriesDialog = function(config){
 	config.width=600;
 	config.height=400;
 	config.closeAction='hide';
-	config.title= GO.cticket.lang.manageCategories;					
-	config.items= this.categoriesGrid;
+	config.title= GO.cticket.lang.manageStatuses;					
+	config.items= this.statusesGrid;
 	config.buttons=[{
 			text: GO.lang['cmdClose'],
 			handler: function(){				
@@ -39,19 +39,19 @@ GO.cticket.ManageCategoriesDialog = function(config){
 		}					
 	];
 	
-	GO.cticket.ManageCategoriesDialog.superclass.constructor.call(this, config);
+	GO.cticket.ManageStatusesDialog.superclass.constructor.call(this, config);
 
 	this.on('hide', function(){
-		if(this.categoriesGrid.changed)
+		if(this.statusesGrid.changed)
 		{
 			this.fireEvent('change');
-			this.categoriesGrid.changed=false;
+			this.statusesGrid.changed=false;
 		}
 	}, this);
 	
 	this.addEvents({'change':true});
 }
 
-Ext.extend(GO.cticket.ManageCategoriesDialog, GO.Window,{
+Ext.extend(GO.cticket.ManageStatusesDialog, GO.Window,{
 
 });

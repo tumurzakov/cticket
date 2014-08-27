@@ -1,16 +1,16 @@
 <?php
 
 
-$l["category_id"]="Note book";
+$l["category_id"]="Category";
 $l["content"]="Content";
-$l["manageCategories"]="Manage note books";
+$l["manageCategories"]="Manage categories";
 
-$l['name']='Notes';
-$l['description']='A module to make to notes';
-$l['category']='Note book';
-$l['categories']='Note books';
-$lang['link_type'][4]=$l['note']='Note';
-$l['notes']='Notes';
+$l['name']='Tickets';
+$l['description']='A module to manage Problems/Deals/Processes etc';
+$l['category']='Category';
+$l['categories']='Categories';
+$lang['link_type'][4]=$l['ticket']='Ticket';
+$l['tickets']='Tickets';
 $l['general'] = 'General';
-$l['incomplete_delete']='You don\'t have permission to delete all selected notes';
-$l['multipleCategoriesSelected']='Multiple note books selected';
+$l['incomplete_delete']='You don\'t have permission to delete all selected tickets';
+$l['multipleCategoriesSelected']='Multiple categories selected';

@@ -15,48 +15,38 @@
 
 /**
  * 
- * The Category model
+ * The Status model
  * 
  * @property String $name The name of the category
- * @property int $files_folder_id
- * @property int $acl_id
  * @property int $user_id
  */
-class GO_Cticket_Model_Category extends GO_Base_Model_AbstractUserDefaultModel {
+class GO_Cticket_Model_Status extends GO_Base_Model_AbstractUserDefaultModel {
 
 	/**
 	 * Returns a static model of itself
 	 * 
 	 * @param String $className
-	 * @return GO_Cticket_Model_Category 
+	 * @return GO_Cticket_Model_Status 
 	 */
 	public static function model($className=__CLASS__)
 	{	
 		return parent::model($className);
 	}
 	
-	public function aclField() {
-		return 'acl_id';
-	}
-
 	public function tableName() {
-		return 'ct_categories';
+		return 'ct_statuses';
 	}
 	
-	public function hasFiles(){
-		return true;
-	}
-
 	public function relations() {
 		return array(
             'tickets' => array(
                 'type' => self::HAS_MANY, 
                 'model' => 'GO_Cticket_Model_Ticket', 
-                'field' => 'category_id', 
+                'field' => 'status_id', 
                 'delete' => true)		
         );
 	}
-	
+
 	protected function init() {
 		$this->columns['name']['unique']=true;
 		return parent::init();

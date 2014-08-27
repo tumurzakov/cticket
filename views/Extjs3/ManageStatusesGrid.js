@@ -6,13 +6,13 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: ManageCategoriesGrid.js 14816 2013-05-21 08:31:20Z mschering $
+ * @version $Id: ManageStatusesGrid.js 14816 2013-05-21 08:31:20Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
  
 
-GO.cticket.ManageCategoriesGrid = Ext.extend(GO.grid.GridPanel,{
+GO.cticket.ManageStatusesGrid = Ext.extend(GO.grid.GridPanel,{
 	changed : false,
 	
 	initComponent : function(){
@@ -20,7 +20,7 @@ GO.cticket.ManageCategoriesGrid = Ext.extend(GO.grid.GridPanel,{
 		Ext.apply(this,{
 			standardTbar:true,
 			standardTbarDisabled:!GO.settings.modules.cticket.write_permission,
-			store: GO.cticket.writableAdminCategoriesStore,
+			store: GO.cticket.writableAdminStatusesStore,
 			border: false,
 			paging:true,
 			view:new Ext.grid.GridView({
@@ -45,31 +45,31 @@ GO.cticket.ManageCategoriesGrid = Ext.extend(GO.grid.GridPanel,{
 			})
 		});
 		
-		GO.cticket.ManageCategoriesGrid.superclass.initComponent.call(this);
+		GO.cticket.ManageStatusesGrid.superclass.initComponent.call(this);
 		
-		GO.cticket.writableAdminCategoriesStore.load();	
+		GO.cticket.writableAdminStatusesStore.load();	
 	},
 	
 	dblClick : function(grid, record, rowIndex){
-		this.showCategoryDialog(record.id);
+		this.showStatusDialog(record.id);
 	},
 	
 	btnAdd : function(){				
-		this.showCategoryDialog();	  	
+		this.showStatusDialog();	  	
 	},
-	showCategoryDialog : function(id){
-		if(!this.categoryDialog){
-			this.categoryDialog = new GO.cticket.CategoryDialog();
+	showStatusDialog : function(id){
+		if(!this.statusDialog){
+			this.statusDialog = new GO.cticket.StatusDialog();
 
-			this.categoryDialog.on('save', function(){   
+			this.statusDialog.on('save', function(){   
 				this.store.load();
 				this.changed=true;	    			    			
 			}, this);	
 		}
-		this.categoryDialog.show(id);	  
+		this.statusDialog.show(id);	  
 	},
 	deleteSelected : function(){
-		GO.cticket.ManageCategoriesGrid.superclass.deleteSelected.call(this);
+		GO.cticket.ManageStatusesGrid.superclass.deleteSelected.call(this);
 		this.changed=true;
 	}
 });

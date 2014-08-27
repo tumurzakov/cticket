@@ -12,25 +12,26 @@
  */
 
  
-GO.notes.MainPanel = function(config){
+GO.cticket.MainPanel = function(config){
 	
 	if(!config)
 	{
 		config = {};
 	}
 
-	this.centerPanel = new GO.notes.NotesGrid({
+	this.centerPanel = new GO.cticket.CticketGrid({
 		region:'center',
 		id:'no-center-panel',
 		border:true
 	});
 	
-	this.westPanel= new GO.grid.MultiSelectGrid({
-		region:'west',
-		id:'no-multiselect',
-		title:GO.notes.lang.categories,
+    this.categoriesPanel = new GO.grid.MultiSelectGrid({
+        region: 'north',
+        height: 200,
+		id:'ct-multiselect-categories',
+		title:GO.cticket.lang.categories,
 		loadMask:true,
-		store: GO.notes.readableCategoriesStore,
+		store: GO.cticket.readableCategoriesStore,
 		width: 210,
 		split:true,
 		allowNoSelection:true,
@@ -38,33 +39,48 @@ GO.notes.MainPanel = function(config){
 		collapseMode:'mini',
 		bbar: new GO.SmallPagingToolbar({
 			items:[this.searchField = new GO.form.SearchField({
-				store: GO.notes.readableCategoriesStore,
+				store: GO.cticket.readableCategoriesStore,
 				width:120,
 				emptyText: GO.lang.strSearch
 			})],
-			store:GO.notes.readableCategoriesStore,
+			store:GO.cticket.readableCategoriesStore,
 			pageSize:GO.settings.config.nav_page_size
 		}),
 		relatedStore: this.centerPanel.store
 	});
 
-//	this.westPanel.on('change', function(grid, categories, records)
-//	{
-//		if(records.length){
-//			this.centerPanel.store.baseParams.notes_categories_filter = Ext.encode(categories);
-//			this.centerPanel.store.reload();
-//			//delete this.centerPanel.store.baseParams.notes_categories_filter;
-//		}
-//	}, this);
-//	
-//	this.westPanel.store.on('load', function()
-//	{
-//		this.centerPanel.store.baseParams.notes_categories_filter = Ext.encode(this.westPanel.getSelected());
-//		this.centerPanel.store.load();		
-//	}, this);
+    this.statusesPanel = new GO.grid.MultiSelectGrid({
+        region: 'center',
+		id:'ct-multiselect-statuses',
+		title:GO.cticket.lang.statuses,
+		loadMask:true,
+		store: GO.cticket.readableStatusesStore,
+		split:true,
+		allowNoSelection:true,
+		collapsible:true,
+		collapseMode:'mini',
+		bbar: new GO.SmallPagingToolbar({
+			items:[this.searchField = new GO.form.SearchField({
+				store: GO.cticket.readableStatusesStore,
+				width:120,
+				emptyText: GO.lang.strSearch
+			})],
+			store:GO.cticket.readableStatusesStore,
+			pageSize:GO.settings.config.nav_page_size
+		}),
+		relatedStore: this.centerPanel.store
+	});
 
-	
-	
+    this.westPanel = new Ext.Panel({
+        width: 210,
+        region: 'west',
+        layout: 'fit',
+        items: [{
+            layout: 'border',
+            items: [this.categoriesPanel, this.statusesPanel]
+        }]
+    });
+
 	this.centerPanel.on("delayedrowselect",function(grid, rowIndex, r){
 		this.eastPanel.load(r.data.id);		
 	}, this);
@@ -73,7 +89,7 @@ GO.notes.MainPanel = function(config){
 		this.eastPanel.editHandler();
 	}, this);
 	
-	this.eastPanel = new GO.notes.NotePanel({
+	this.eastPanel = new GO.cticket.TicketPanel({
 		region:'east',
 		id:'no-east-panel',
 		width:440,
@@ -90,7 +106,7 @@ GO.notes.MainPanel = function(config){
 			handler: function(b){
 				this.eastPanel.reset();
 
-				GO.notes.showNoteDialog(0, {
+				GO.cticket.showTicketDialog(0, {
 						loadParams:{
 							category_id: b.buttonParams.id						
 						}
@@ -109,40 +125,38 @@ GO.notes.MainPanel = function(config){
 			scope: this
 		},{
 			iconCls: 'no-btn-categories',
-			text: GO.notes.lang.manageCategories,
+			text: GO.cticket.lang.manageCategories,
 			cls: 'x-btn-text-icon',
 			handler: function(){
 				if(!this.categoriesDialog)
 				{
-					this.categoriesDialog = new GO.notes.ManageCategoriesDialog();
+					this.categoriesDialog = new GO.cticket.ManageCategoriesDialog();
 					this.categoriesDialog.on('change', function(){
-						this.westPanel.store.reload();
-						GO.notes.writableCategoriesStore.reload();
+						this.categoriesPanel.store.reload();
+						GO.cticket.writableCategoriesStore.reload();
 					}, this);
 				}
 				this.categoriesDialog.show();
 			},
 			scope: this
+		},{
+			iconCls: 'no-btn-statuses',
+			text: GO.cticket.lang.manageStatuses,
+			cls: 'x-btn-text-icon',
+			handler: function(){
+				if(!this.statusesDialog)
+				{
+					this.statusesDialog = new GO.cticket.ManageStatusesDialog();
+					this.statusesDialog.on('change', function(){
+						this.statusesPanel.store.reload();
+						GO.cticket.writableStatusesStore.reload();
+					}, this);
+				}
+				this.statusesDialog.show();
+			},
+			scope: this
 				
 		}
-//		,{
-//				iconCls: 'btn-export',
-//				text: GO.lang.cmdExport,
-//				cls: 'x-btn-text-icon',
-//				handler:function(){				
-//					if(!this.exportDialog)
-//					{
-//						this.exportDialog = new GO.ExportGridDialog({
-//							url: 'notes/note/export',
-//							name: 'notes',
-//							documentTitle:'ExportNote',
-//							colModel: this.centerPanel.getColumnModel()
-//						});
-//					}		
-//					this.exportDialog.show();
-//				},
-//				scope: this
-//			}
 		]
 		});
 
@@ -153,32 +167,33 @@ GO.notes.MainPanel = function(config){
 	];	
 	
 	config.layout='border';
-	GO.notes.MainPanel.superclass.constructor.call(this, config);	
+	GO.cticket.MainPanel.superclass.constructor.call(this, config);	
 };
 
 
-Ext.extend(GO.notes.MainPanel, Ext.Panel, {
+Ext.extend(GO.cticket.MainPanel, Ext.Panel, {
 	afterRender : function()
 	{
-		GO.dialogListeners.add('note',{
+		GO.dialogListeners.add('ticket',{
 			scope:this,
 			save:function(){
 				this.centerPanel.store.reload();
 			}
 		});
 
-		GO.notes.readableCategoriesStore.load();
+		GO.cticket.readableCategoriesStore.load();
+		GO.cticket.readableStatusesStore.load();
 		
-		GO.notes.MainPanel.superclass.afterRender.call(this);
+		GO.cticket.MainPanel.superclass.afterRender.call(this);
 	}
 });
 
-GO.notes.showNoteDialog = function(note_id, config){
+GO.cticket.showTicketDialog = function(ticket_id, config){
 
-	if(!GO.notes.noteDialog)
-		GO.notes.noteDialog = new GO.notes.NoteDialog();
+	if(!GO.cticket.ticketDialog)
+		GO.cticket.ticketDialog = new GO.cticket.TicketDialog();
 	
-	GO.notes.noteDialog.show(note_id, config);
+	GO.cticket.ticketDialog.show(ticket_id, config);
 }
 
 
@@ -186,9 +201,9 @@ GO.notes.showNoteDialog = function(note_id, config){
  * This will add the module to the main tabpanel filled with all the modules
  */
  
-GO.moduleManager.addModule('notes', GO.notes.MainPanel, {
-	title : GO.notes.lang.notes,
-	iconCls : 'go-tab-icon-notes'
+GO.moduleManager.addModule('cticket', GO.cticket.MainPanel, {
+	title : GO.cticket.lang.tickets,
+	iconCls : 'go-tab-icon-cticket'
 });
 /*
  * If your module has a linkable item, you should add a link handler like this. 
@@ -199,24 +214,24 @@ GO.moduleManager.addModule('notes', GO.notes.MainPanel, {
  * panel with links. 
  */
 
-GO.linkHandlers["GO_Notes_Model_Note"]=function(id){
-	if(!GO.notes.linkWindow){
-		var notePanel = new GO.notes.NotePanel();
-		GO.notes.linkWindow= new GO.LinkViewWindow({
-			title: GO.notes.lang.note,
-			items: notePanel,
-			notePanel: notePanel,
+GO.linkHandlers["GO_Cticket_Model_Ticket"]=function(id){
+	if(!GO.cticket.linkWindow){
+		var ticketPanel = new GO.cticket.TicketPanel();
+		GO.cticket.linkWindow= new GO.LinkViewWindow({
+			title: GO.cticket.lang.ticket,
+			items: ticketPanel,
+			ticketPanel: ticketPanel,
 			closeAction:"hide"
 		});
 	}
-	GO.notes.linkWindow.notePanel.load(id);
-	GO.notes.linkWindow.show();
-	return GO.notes.linkWindow;
+	GO.cticket.linkWindow.ticketPanel.load(id);
+	GO.cticket.linkWindow.show();
+	return GO.cticket.linkWindow;
 }
 
-GO.linkPreviewPanels["GO_Notes_Model_Note"]=function(config){
+GO.linkPreviewPanels["GO_Cticket_Model_Ticket"]=function(config){
 	config = config || {};
-	return new GO.notes.NotePanel(config);
+	return new GO.cticket.TicketPanel(config);
 }
 
 
@@ -224,10 +239,10 @@ GO.linkPreviewPanels["GO_Notes_Model_Note"]=function(config){
 
 
 GO.newMenuItems.push({
-	text: GO.notes.lang.note,
-	iconCls: 'go-model-icon-GO_Notes_Model_Note',
+	text: GO.cticket.lang.ticket,
+	iconCls: 'go-model-icon-GO_Cticket_Model_Ticket',
 	handler:function(item, e){		
-		GO.notes.showNoteDialog(0, {
+		GO.cticket.showTicketDialog(0, {
 			link_config: item.parentMenu.link_config			
 		});
 	}

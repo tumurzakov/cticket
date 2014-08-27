@@ -14,7 +14,7 @@
  */
 
 /**
- * The Note model
+ * The Ticket model
  * 
  * @property int $id
  * @property int $category_id
@@ -25,11 +25,8 @@
  * @property int $muser_id
  * @property int $ctime
  * @property int $user_id
- * 
- * @property boolean $encrypted
- * @property string $password
  */
-class GO_Notes_Model_Note extends GO_Base_Db_ActiveRecord {
+class GO_Cticket_Model_Ticket extends GO_Base_Db_ActiveRecord {
 	
 	private $_decrypted=false;
 	
@@ -37,7 +34,7 @@ class GO_Notes_Model_Note extends GO_Base_Db_ActiveRecord {
 	 * Returns a static model of itself
 	 * 
 	 * @param String $className
-	 * @return GO_Notes_Model_Note 
+	 * @return GO_Cticket_Model_Ticket 
 	 */
 	public static function model($className=__CLASS__)
 	{	
@@ -53,7 +50,7 @@ class GO_Notes_Model_Note extends GO_Base_Db_ActiveRecord {
 	}
 	
 	public function getLocalizedName(){
-		return GO::t('note','notes');
+		return GO::t('ticket','tickets');
 	}
 	
 	public function aclField(){
@@ -61,7 +58,7 @@ class GO_Notes_Model_Note extends GO_Base_Db_ActiveRecord {
 	}
 	
 	public function tableName(){
-		return 'no_notes';
+		return 'ct_tickets';
 	}
 	
 	public function hasFiles(){
@@ -71,14 +68,21 @@ class GO_Notes_Model_Note extends GO_Base_Db_ActiveRecord {
 		return true;
 	}
 	public function customfieldsModel(){
-		return "GO_Notes_Customfields_Model_Note";
+		return "GO_Cticket_Customfields_Model_Ticket";
 	}
 
 	public function relations(){
 		return array(	
-				'category' => array('type'=>self::BELONGS_TO, 'model'=>'GO_Notes_Model_Category', 'field'=>'category_id'),		);
+            'category' => array(
+                'type'=>self::BELONGS_TO, 
+                'model'=>'GO_Cticket_Model_Category', 
+                'field'=>'category_id'),
+            'status' => array(
+                'type'=>self::BELONGS_TO, 
+                'model'=>'GO_Cticket_Model_Status', 
+                'field'=>'status_id'),
+        );
 	}
-
 
 	protected function getCacheAttributes() {
 		return array(
@@ -91,42 +95,8 @@ class GO_Notes_Model_Note extends GO_Base_Db_ActiveRecord {
 	 * The files module will use this function.
 	 */
 	public function buildFilesPath() {
-
-		return 'notes/' . GO_Base_Fs_Base::stripInvalidChars($this->category->name) . '/' . date('Y', $this->ctime) . '/' . GO_Base_Fs_Base::stripInvalidChars($this->name).' ('.$this->id.')';
+		return 'cticket/' . GO_Base_Fs_Base::stripInvalidChars($this->category->name) . 
+            '/' . date('Y', $this->ctime) . 
+            '/' . GO_Base_Fs_Base::stripInvalidChars($this->name).' ('.$this->id.')';
 	}
-	
-	public function defaultAttributes() {
-		$attr = parent::defaultAttributes();
-		
-		$category = GO_Notes_NotesModule::getDefaultNoteCategory(GO::user()->id);
-		$attr['category_id']=$category->id;
-		
-		return $attr;
-	}
-	
-	
-	
-	
-	
-	protected function getEncrypted(){
-		return !$this->_decrypted && !empty($this->password);
-	}
-
-	
-	public function decrypt($password) {
-		
-		if($this->password!=crypt($password,$this->password)){
-			return false;		
-		}else{
-			$this->_decrypted=true;
-			$this->content = GO_Base_Util_Crypt::decrypt($this->content, $password);
-			return true;
-		}
-	}
-	
-	public function encrypt($password){
-		$this->content = GO_Base_Util_Crypt::encrypt($this->content, $password);
-		$this->password = $password;
-	}
-		
 }
