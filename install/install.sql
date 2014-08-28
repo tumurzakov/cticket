@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS `ct_tickets` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `category_id` (`category_id`),
+  KEY `status_id` (`status_id`),
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -77,6 +78,7 @@ CREATE TABLE IF NOT EXISTS `ct_tickets` (
 DROP TABLE IF EXISTS `ct_statuses`;
 CREATE TABLE IF NOT EXISTS `ct_statuses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

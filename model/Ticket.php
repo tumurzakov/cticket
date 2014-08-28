@@ -84,10 +84,18 @@ class GO_Cticket_Model_Ticket extends GO_Base_Db_ActiveRecord {
         );
 	}
 
+	public function defaultAttributes() {
+		$attr = parent::defaultAttributes();
+		
+		$attr['category_id']=1;
+		
+		return $attr;
+    }
+
 	protected function getCacheAttributes() {
 		return array(
 				'name' => $this->name,
-				'description'=>''
+				'description'=>"{$this->category->name} // {$this->status->name}"
 		);
 	}
 	

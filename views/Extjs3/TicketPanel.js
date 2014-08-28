@@ -36,12 +36,19 @@ GO.cticket.TicketPanel = Ext.extend(GO.DisplayPanel,{
 						'<td colspan="2" class="display-panel-heading">'+GO.cticket.lang.ticket+': {name}</td>'+
 					'</tr>'+
 					'<tr>'+
-						'<td>ID:</td>'+
+						'<td>#:</td>'+
 						'<td>{id}</td>'+
 					'</tr>'+
 					'<tr>'+
-						'<td>Content:</td>'+
-						'<td>{content}</td>'+
+						'<td>'+GO.cticket.lang.category+':</td>'+
+						'<td>{category}</td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td>'+GO.cticket.lang.status+':</td>'+
+						'<td>{status}</td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td colspan="2" class="display-panel-heading">{content}</td>'+
 					'</tr>'+
 				'</table>';																		
 				

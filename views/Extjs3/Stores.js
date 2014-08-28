@@ -20,7 +20,7 @@ GO.cticket.readableCategoriesStore = new GO.data.JsonStore({
 	baseParams: {
 		limit:GO.settings.config.nav_page_size
 	},
-	fields: ['id','user_name','acl_id','name','checked']
+	fields: ['id','user_name','acl_id','name','checked', 'count']
 });
 
 GO.cticket.writableStatusesStore = new GO.data.JsonStore({
@@ -30,7 +30,7 @@ GO.cticket.writableStatusesStore = new GO.data.JsonStore({
 
 GO.cticket.writableAdminStatusesStore = new GO.data.JsonStore({
 	url: GO.url('cticket/status/store'),
-	fields: ['id', 'name']
+	fields: ['id', 'name', 'category']
 });
 
 
@@ -39,5 +39,5 @@ GO.cticket.readableStatusesStore = new GO.data.JsonStore({
 	baseParams: {
 		limit:GO.settings.config.nav_page_size
 	},
-	fields: ['id','name','checked']
+	fields: ['id','name','checked', 'count']
 });

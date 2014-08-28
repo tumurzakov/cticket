@@ -63,5 +63,21 @@ class GO_Cticket_Controller_Category extends GO_Base_Controller_AbstractModelCon
 	protected function remoteComboFields(){
 		return array('user_id'=>'$model->user->name');
 	}
+
+	public function formatStoreRecord($record, $model, $store) {
+        $count = GO_Cticket_Model_Ticket::model()->find(
+            GO_Base_Db_FindParams::newInstance()
+                ->single()
+                ->select("COUNT(*) as count")
+				->criteria(
+                    GO_Base_Db_FindCriteria::newInstance()
+                        ->addCondition('category_id', $model->id)
+                )
+        );
+
+		$record['count'] = $count->count;
+		return parent::formatStoreRecord($record, $model, $store);
+    }
+
 }
 

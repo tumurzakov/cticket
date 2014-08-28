@@ -25,7 +25,7 @@ GO.cticket.MainPanel = function(config){
 		border:true
 	});
 	
-    this.categoriesPanel = new GO.grid.MultiSelectGrid({
+    this.categoriesPanel = new GO.cticket.CategoriesGrid({
         region: 'north',
         height: 200,
 		id:'ct-multiselect-categories',
@@ -49,7 +49,7 @@ GO.cticket.MainPanel = function(config){
 		relatedStore: this.centerPanel.store
 	});
 
-    this.statusesPanel = new GO.grid.MultiSelectGrid({
+    this.statusesPanel = new GO.cticket.StatusesGrid({
         region: 'center',
 		id:'ct-multiselect-statuses',
 		title:GO.cticket.lang.statuses,
@@ -70,6 +70,19 @@ GO.cticket.MainPanel = function(config){
 		}),
 		relatedStore: this.centerPanel.store
 	});
+
+    this.categoriesPanel.on('rowclick', function(grid, rowIndex, e) {
+        var record = grid.store.getAt(rowIndex);
+        this.statusesPanel.store.baseParams.category_id = record.get('id');
+        this.statusesPanel.store.reload();
+    }, this);
+
+    this.categoriesPanel.store.on('load', function(store, records, e) {
+        if (records.length > 0) {
+            this.statusesPanel.store.baseParams.category_id = records[0].get('id');
+            this.statusesPanel.store.reload();
+        }
+    }, this);
 
     this.westPanel = new Ext.Panel({
         width: 210,
@@ -182,7 +195,6 @@ Ext.extend(GO.cticket.MainPanel, Ext.Panel, {
 		});
 
 		GO.cticket.readableCategoriesStore.load();
-		GO.cticket.readableStatusesStore.load();
 		
 		GO.cticket.MainPanel.superclass.afterRender.call(this);
 	}

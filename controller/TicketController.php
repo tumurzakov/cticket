@@ -70,4 +70,10 @@ class GO_Cticket_Controller_Ticket extends GO_Base_Controller_AbstractModelContr
 
 		return parent::formatStoreRecord($record, $model, $store);
     }
+
+	protected function beforeDisplay(&$response, &$model, &$params) {
+        $response['data']['category'] = $model->category->name;
+        $response['data']['status'] = $model->status->name;
+		return parent::beforeDisplay($response, $model, $params);
+    }
 }

@@ -20,7 +20,7 @@
  * @property String $name The name of the category
  * @property int $user_id
  */
-class GO_Cticket_Model_Status extends GO_Base_Model_AbstractUserDefaultModel {
+class GO_Cticket_Model_Status extends GO_Base_Db_ActiveRecord {
 
 	/**
 	 * Returns a static model of itself
@@ -43,12 +43,15 @@ class GO_Cticket_Model_Status extends GO_Base_Model_AbstractUserDefaultModel {
                 'type' => self::HAS_MANY, 
                 'model' => 'GO_Cticket_Model_Ticket', 
                 'field' => 'status_id', 
-                'delete' => true)		
+                'delete' => true),
+            'category' => array(
+                'type'=>self::BELONGS_TO, 
+                'model'=>'GO_Cticket_Model_Category', 
+                'field'=>'category_id'),
         );
 	}
 
 	protected function init() {
-		$this->columns['name']['unique']=true;
 		return parent::init();
 	}
 }

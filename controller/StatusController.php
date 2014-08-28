@@ -23,9 +23,15 @@ class GO_Cticket_Controller_Status extends GO_Base_Controller_AbstractModelContr
 	
 	protected function beforeStoreStatement(array &$response, array &$params, 
         GO_Base_Data_AbstractStore &$store, GO_Base_Db_FindParams $storeParams) {
+
+        if (!empty($params['category_id'])) {
+            $storeParams->criteria(
+                GO_Base_Db_FindCriteria::newInstance()
+                    ->addCondition('category_id', $params['category_id']));
+        }
 		
 		$multiSel = new GO_Base_Component_MultiSelectGrid(
-						'no-multiselect', 
+						'no-multiselect-status', 
 						"GO_Cticket_Model_Status",$store, $params);		
 		$multiSel->setFindParamsForDefaultSelection($storeParams);
 		$multiSel->formatCheckedColumn();
@@ -34,8 +40,23 @@ class GO_Cticket_Controller_Status extends GO_Base_Controller_AbstractModelContr
 	}
 
 	protected function beforeStore(&$response, &$params, &$store) {
-		$store->setDefaultSortOrder('name','ASC');
+		$store->setDefaultSortOrder('id','ASC');
 		return parent::beforeStore($response, $params, $store);
 	}
 	
+	public function formatStoreRecord($record, $model, $store) {
+        $count = GO_Cticket_Model_Ticket::model()->find(
+            GO_Base_Db_FindParams::newInstance()
+                ->single()
+                ->select("COUNT(*) as count")
+				->criteria(
+                    GO_Base_Db_FindCriteria::newInstance()
+                        ->addCondition('status_id', $model->id)
+                )
+        );
+
+		$record['count'] = $count->count;
+		$record['category'] = $model->category->name;
+		return parent::formatStoreRecord($record, $model, $store);
+    }
 }

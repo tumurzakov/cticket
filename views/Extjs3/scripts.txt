@@ -1,3 +1,6 @@
+modules/cticket/views/Extjs3/CategoriesGrid.js
+modules/cticket/views/Extjs3/StatusesGrid.js
+
 modules/cticket/views/Extjs3/TicketGrid.js
 modules/cticket/views/Extjs3/TicketDialog.js
 modules/cticket/views/Extjs3/TicketPanel.js
