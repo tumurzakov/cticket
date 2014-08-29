@@ -45,17 +45,26 @@ class GO_Cticket_Controller_Status extends GO_Base_Controller_AbstractModelContr
 	}
 	
 	public function formatStoreRecord($record, $model, $store) {
-        $count = GO_Cticket_Model_Ticket::model()->find(
-            GO_Base_Db_FindParams::newInstance()
-                ->single()
-                ->select("COUNT(*) as count")
-				->criteria(
-                    GO_Base_Db_FindCriteria::newInstance()
-                        ->addCondition('status_id', $model->id)
-                )
-        );
+        if (@$_REQUEST['store'] == 'readableStatusesStore') {
+            $count = GO_Cticket_Model_Ticket::model()->find(
+                GO_Base_Db_FindParams::newInstance()
+                    ->single()
+                    ->select("COUNT(*) as count")
+                    ->criteria(
+                        GO_Base_Db_FindCriteria::newInstance()
+                            ->addCondition('status_id', $model->id)
+                    )
+            );
 
-		$record['count'] = $count->count;
+		    $record['count'] = $count->count;
+        }
+
+        $record['template'] = "";
+        if ($record['template_id'] > 0) {
+            $template = GO_Addressbook_Model_Template::model()->findByPk($record['template_id']);
+		    $record['template'] = $template->name;
+        }
+
 		$record['category'] = $model->category->name;
 		return parent::formatStoreRecord($record, $model, $store);
     }

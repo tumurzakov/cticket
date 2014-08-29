@@ -17,4 +17,5 @@ $l["manageCategories"]="Управление категориями";
 $l["manageStatuses"]="Управление статусами";
 $l["status"]="Статус";
 $l["statuses"]="Статусы";
-
+$l["template"]="Шаблон";
+$l["sendEmail"]="Оповещать по email";

@@ -55,12 +55,31 @@ class GO_Cticket_Controller_Ticket extends GO_Base_Controller_AbstractModelContr
             'status_id'=>'$model->status->name'
         );
 	}
+
+	protected function beforeSubmit(&$response, &$model, &$params) {
+        if (!isset($params['send_email'])) {
+            $params['send_email'] = 0;
+        }
+
+		return parent::beforeSubmit($response, $model, $params);
+    }
 	
 	protected function afterSubmit(&$response, &$model, &$params, $modifiedAttributes) {		
-		 if(GO::modules()->files){
-			 $f = new GO_Files_Controller_Folder();
-			 $f->processAttachments($response, $model, $params);
-		 }		
+		if(GO::modules()->files){
+		    $f = new GO_Files_Controller_Folder();
+		    $f->processAttachments($response, $model, $params);
+		}		
+
+        if (isset($modifiedAttributes['status_id']) && $params['send_email'] > 0) {
+            $status = GO_Cticket_Model_Status::model()->findByPk($params['status_id']);
+            if ($status->template_id > 0) {
+                $template = GO_Addressbook_Model_Template::model()->findByPk($status->template_id);
+                if ($template) {
+                    $this->sendEmail($template, $model);
+                }
+            }
+        }
+
 		return parent::afterSubmit($response, $model, $params, $modifiedAttributes);
 	}
 
@@ -75,5 +94,56 @@ class GO_Cticket_Controller_Ticket extends GO_Base_Controller_AbstractModelContr
         $response['data']['category'] = $model->category->name;
         $response['data']['status'] = $model->status->name;
 		return parent::beforeDisplay($response, $model, $params);
+    }
+
+    private function sendEmail($template, $model) {
+        $user_id = $_SESSION['GO_SESSION']['user_id'];
+		$account = GO_Email_Model_Account::model()->find(
+            GO_Base_Db_FindParams::newInstance()
+                ->single()
+				->criteria(
+                    GO_Base_Db_FindCriteria::newInstance()
+                        ->addCondition('user_id', $user_id)
+                )
+        );
+
+		$alias = GO_Email_Model_Alias::model()->find(
+            GO_Base_Db_FindParams::newInstance()
+                ->single()
+				->criteria(
+                    GO_Base_Db_FindCriteria::newInstance()
+                        ->addCondition('account_id', $account->id)
+                )
+        );
+
+		$mailer = GO_Base_Mail_Mailer::newGoInstance(GO_Email_Transport::newGoInstance($account));
+
+		$message = GO_Base_Mail_Message::newInstance($template->name)
+						->loadMimeMessage($template->content);
+
+        $message->setFrom($alias->email, $alias->name);
+
+        $recipients = array();
+        $stmt = GO_Addressbook_Model_Company::model()->findLinks($model);
+        while($company = $stmt->fetch()) {
+            if ($company->email) {
+                $recipients[$company->email] = $company->name;
+            }
+        }
+
+        $message->setTo($recipients);
+
+		$success = $mailer->send($message);
+
+        if ($success) {
+            $comment = new GO_Comments_Model_Comment();
+            $comment->user_id = $user_id;
+            $comment->model_id = $model->id;
+		    $comment->model_type_id=GO_Base_Model_ModelType::model()->findByModelName("GO_Cticket_Model_Ticket");
+            $comment->comments = sprintf("Email sent\nTemplate: %s", $template->name);
+            $comment->save();
+        } else {
+            throw new Exception("Error while sending mail");
+        }
     }
 }

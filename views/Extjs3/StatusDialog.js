@@ -54,6 +54,21 @@ GO.cticket.StatusDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 				selectOnFocus:true,
 				forceSelection: true,
 				allowBlank: false
+            }), this.selectTemplate = new GO.form.ComboBox({
+				fieldLabel: GO.cticket.lang.template,
+				hiddenName:'template_id',
+				anchor:'100%',
+				emptyText:GO.lang.strPleaseSelect,
+				store: GO.cticket.writableTemplatesStore,
+				pageSize: parseInt(GO.settings.max_rows_list),
+				valueField:'id',
+				displayField:'name',
+				mode: 'remote',
+				triggerAction: 'all',
+				editable: true,
+				selectOnFocus:true,
+				forceSelection: true,
+				allowBlank: false
 			})
             ]
 				

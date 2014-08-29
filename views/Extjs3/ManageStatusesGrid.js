@@ -40,6 +40,10 @@ GO.cticket.ManageStatusesGrid = Ext.extend(GO.grid.GridPanel,{
 					header: GO.cticket.lang.category,
 					dataIndex: 'category',
 					sortable: false
+				},{
+					header: GO.cticket.lang.template,
+					dataIndex: 'template',
+					sortable: false
 				}		
 				]
 			})

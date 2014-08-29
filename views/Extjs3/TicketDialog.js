@@ -78,8 +78,15 @@ GO.cticket.TicketDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 				selectOnFocus:true,
 				forceSelection: true,
 				allowBlank: false
-			}),
-			this.selectLinkField,
+			}), {
+				xtype: 'checkbox',
+				name: 'send_email',
+                inputValue: '1',
+				anchor: '100%',
+				maxLength: 100,
+				allowBlank:false,
+				fieldLabel: GO.cticket.lang.sendEmail
+            }, this.selectLinkField,
 			this.contentField = new Ext.form.TextArea({
 				name: 'content',
 				anchor: '100%',
