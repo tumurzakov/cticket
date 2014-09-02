@@ -20,8 +20,8 @@ And install it in modules
 Changes in other modules
 ------------------------
 
-* *go/base/mail/Imap.php*
- * Saving last response: 
+* **go/base/mail/Imap.php**
+ * Saving last response
     ```
 	public function append_end() {
 		$this->result = $this->get_response(false, true);
@@ -29,9 +29,10 @@ Changes in other modules
 	}
     ```
     This is needed for getting imap uid. 
-    Standart $imap->get_uidnext() returns random uids;
-* *modules/email/controllers/MessageController.php*
- * New event *aftersave* 
+    Standart $imap->get_uidnext() returns random uids.
+
+* **modules/email/controllers/MessageController.php**
+ * New event **aftersave** 
     ```
     if(!$imap->append_message($account->drafts, $message, "\Seen")){
         $response['success'] = false;
