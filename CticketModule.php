@@ -18,6 +18,11 @@
  * 
  */
 class GO_Cticket_CticketModule extends GO_Base_Module{
+	public static function initListeners() {		
+		$messageController = new GO_Email_Controller_Message();
+		$messageController->addListener('aftersave', "GO_Cticket_EventHandlers", "afterSave");
+		$messageController->addListener('beforesend', "GO_Cticket_EventHandlers", "beforeSend");
+    }
 	
 	public function autoInstall() {
 		return true;

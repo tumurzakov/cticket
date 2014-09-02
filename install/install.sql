@@ -85,3 +85,17 @@ CREATE TABLE IF NOT EXISTS `ct_statuses` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+
+DROP TABLE IF EXISTS `ct_ticket_statuses`;
+CREATE TABLE IF NOT EXISTS `ct_ticket_statuses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ticket_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `email_uid` varchar(100) NOT NULL,
+  `email_mailbox` varchar(100) NOT NULL,
+  `email_account_id` int(11) NOT NULL,
+  `email_sent` int(11) NOT NULL,
+  `ctime` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+

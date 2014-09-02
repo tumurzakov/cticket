@@ -17,9 +17,33 @@ Clone this repository to modules folder of your Group-Office installation
 
 And install it in modules
 
-ToDo
-----
+Changes in other modules
+------------------------
 
-* Counting tickets in category and status grids
-* Change history
-* Add email announcements on status change
+* go/base/mail/Imap.php
+ * Saving last response: ```
+	public function append_end() {
+		$this->result = $this->get_response(false, true);
+		return  $this->check_response($this->result, true);
+	}
+    ```
+    This is needed for getting imap uid. 
+    Standart ```$imap->get_uidnext()``` returns random uids;
+* modules/email/controllers/MessageController.php
+ * New event *aftersave* ```
+    if(!$imap->append_message($account->drafts, $message, "\Seen")){
+        $response['success'] = false;
+        $response['feedback']=$imap->last_error();
+    }
+
+    $this->fireEvent('aftersave', array(
+            &$this,
+            &$response,
+            &$message,
+            &$imap,
+            $account,
+            $alias,
+            $params
+    ));
+    ```
+    This event needed for updating imap uid in TicketStatus

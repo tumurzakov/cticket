@@ -50,8 +50,42 @@ GO.cticket.TicketPanel = Ext.extend(GO.DisplayPanel,{
 					'<tr>'+
 						'<td colspan="2" class="display-panel-heading">{content}</td>'+
 					'</tr>'+
+					'<tr>'+
+						'<td colspan="2">'+
+                            '<table>' +
+                                '<tpl for="statuses">'+
+                                    '<tr>' + 
+                                        '<td>{status}</td>' + 
+                                        '<td>{created}</td>' + 
+                                        '<td>'+
+								            '<tpl if="!GO.util.empty(email_uid)">'+
+                                                '<a href="#" onClick=\'GO.cticket.openStatusEmail({[JSON.stringify(values)]}, "{[this.getPanel()]}")\'>Draft</a>'+
+                                            '</tpl>' +
+                                        '</td>' + 
+                                        '<td>'+
+								            '<tpl if="sent">'+
+                                                'Sent'+
+                                            '</tpl>' +
+                                        '</td>' + 
+                                    '</tr>' + 
+                                '</tpl>'+
+                            '</table>'
+                        '</td>'+
+					'</tr>'+
 				'</table>';																		
-				
+
+        var scope = this;
+		Ext.apply(this.templateConfig, {
+            getPanel: function() {
+                if (!GO.cticket.tmp_panel) {
+                    GO.cticket.tmp_panel = {};
+                }
+                var key = Math.random().toString(36).substring(7);
+                GO.cticket.tmp_panel[key] = scope;
+                return key;
+            }
+        });
+    
 		if(GO.customfields)
 		{
 			this.template +=GO.customfields.displayPanelTemplate;
@@ -86,3 +120,22 @@ GO.cticket.TicketPanel = Ext.extend(GO.DisplayPanel,{
 	}
 	
 });			
+
+GO.cticket.openStatusEmail = function(status, key) {
+    var panel = GO.cticket.tmp_panel[key];
+    var composer = GO.email.showComposer({
+        uid: status.email_uid,
+        task: 'opendraft',
+        template_id: 0,
+        mailbox: status.email_mailbox,
+        account_id: status.email_account_id 
+    });
+
+    composer.on('save', function() {
+        panel.reload();
+    });
+
+    composer.on('send', function() {
+        panel.reload();
+    });
+}

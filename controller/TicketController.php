@@ -71,13 +71,16 @@ class GO_Cticket_Controller_Ticket extends GO_Base_Controller_AbstractModelContr
 		}		
 
         if (isset($modifiedAttributes['status_id']) && $params['send_email'] > 0) {
+            $draftUid = "";
             $status = GO_Cticket_Model_Status::model()->findByPk($params['status_id']);
             if ($status->template_id > 0) {
                 $template = GO_Addressbook_Model_Template::model()->findByPk($status->template_id);
                 if ($template) {
-                    $this->sendEmail($template, $model);
+                    $draftUid = $this->sendEmail($template, $model);
                 }
             }
+
+            $this->saveStatusChange($model, $draftUid);
         }
 
 		return parent::afterSubmit($response, $model, $params, $modifiedAttributes);
@@ -93,6 +96,18 @@ class GO_Cticket_Controller_Ticket extends GO_Base_Controller_AbstractModelContr
 	protected function beforeDisplay(&$response, &$model, &$params) {
         $response['data']['category'] = $model->category->name;
         $response['data']['status'] = $model->status->name;
+        $response['data']['statuses'] = array();
+        $stmt = $model->statuses;
+        while($status = $stmt->fetch()) {
+            $response['data']['statuses'][] = array(
+                'status'=>$status->status->name,
+                'email_uid'=>$status->email_uid,
+                'email_mailbox'=>$status->email_mailbox,
+                'account_id'=>$status->email_account_id,
+                'created'=>strftime("%F %T", $status->ctime),
+                'sent'=>$status->email_sent
+            );
+        }
 		return parent::beforeDisplay($response, $model, $params);
     }
 
@@ -133,17 +148,29 @@ class GO_Cticket_Controller_Ticket extends GO_Base_Controller_AbstractModelContr
 
         $message->setTo($recipients);
 
-		$success = $mailer->send($message);
+		$imap = $account->openImapConnection($account->drafts);
 
-        if ($success) {
-            $comment = new GO_Comments_Model_Comment();
-            $comment->user_id = $user_id;
-            $comment->model_id = $model->id;
-		    $comment->model_type_id=GO_Base_Model_ModelType::model()->findByModelName("GO_Cticket_Model_Ticket");
-            $comment->comments = sprintf("Email sent\nTemplate: %s", $template->name);
-            $comment->save();
-        } else {
-            throw new Exception("Error while sending mail");
-        }
+		if(!$imap->append_message($account->drafts, $message, "\Seen")){
+			//$imap->last_error();
+		}
+
+        return array(
+            'uid'=>@$imap->result[1][5],
+            'mailbox'=>$account->drafts,
+            'account_id'=>$account->id
+        );
+    }
+
+    private function saveStatusChange($model, $email = array()) {
+        $ticketStatus = new GO_Cticket_Model_TicketStatus();
+        $ticketStatus->setAttributes(array(
+            "ticket_id" => $model->id,
+            "status_id" => $model->status_id,
+            "email_sent" => 0,
+            "email_uid" => @$email['uid'],
+            "email_mailbox" =>@$email['mailbox'],
+            "email_account_id" =>@$email['account_id'],
+        ));
+        $ticketStatus->save();
     }
 }
