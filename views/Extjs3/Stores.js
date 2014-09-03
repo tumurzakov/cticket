@@ -25,7 +25,7 @@ GO.cticket.readableCategoriesStore = new GO.data.JsonStore({
 
 GO.cticket.writableStatusesStore = new GO.data.JsonStore({
 	url: GO.url('cticket/status/store'),
-	fields: ['id', 'name']	
+	fields: ['id', 'name']
 });
 
 GO.cticket.writableAdminStatusesStore = new GO.data.JsonStore({

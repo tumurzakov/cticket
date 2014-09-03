@@ -55,18 +55,22 @@ GO.cticket.TicketPanel = Ext.extend(GO.DisplayPanel,{
                             '<table>' +
                                 '<tpl for="statuses">'+
                                     '<tr>' + 
+                                        '<td>{category}</td>' + 
                                         '<td>{status}</td>' + 
-                                        '<td>{created}</td>' + 
                                         '<td>'+
 								            '<tpl if="!GO.util.empty(email_uid)">'+
-                                                '<a href="#" onClick=\'GO.cticket.openStatusEmail({[JSON.stringify(values)]}, "{[this.getPanel()]}")\'>Draft</a>'+
+                                                '<a href="#" onClick=\'GO.cticket.openStatusEmail({[JSON.stringify(values)]}, "{[this.getPanel()]}")\'>'+
+                                                    GO.cticket.lang.draft+
+                                                '</a>'+
                                             '</tpl>' +
                                         '</td>' + 
                                         '<td>'+
 								            '<tpl if="sent">'+
-                                                'Sent'+
+                                                GO.cticket.lang.sent+
                                             '</tpl>' +
                                         '</td>' + 
+                                        '<td>{user}</td>' + 
+                                        '<td>{created}</td>' + 
                                     '</tr>' + 
                                 '</tpl>'+
                             '</table>'
@@ -123,6 +127,7 @@ GO.cticket.TicketPanel = Ext.extend(GO.DisplayPanel,{
 
 GO.cticket.openStatusEmail = function(status, key) {
     var panel = GO.cticket.tmp_panel[key];
+    GO.cticket.last_ticket_folder_id = status.folder_id;
     var composer = GO.email.showComposer({
         uid: status.email_uid,
         task: 'opendraft',
@@ -137,5 +142,13 @@ GO.cticket.openStatusEmail = function(status, key) {
 
     composer.on('send', function() {
         panel.reload();
+    });
+
+    composer.on('close', function() {
+        GO.cticket.last_ticket_folder_id = '';
+    });
+
+    composer.on('hide', function() {
+        GO.cticket.last_ticket_folder_id = '';
     });
 }

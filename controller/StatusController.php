@@ -24,11 +24,16 @@ class GO_Cticket_Controller_Status extends GO_Base_Controller_AbstractModelContr
 	protected function beforeStoreStatement(array &$response, array &$params, 
         GO_Base_Data_AbstractStore &$store, GO_Base_Db_FindParams $storeParams) {
 
-        if (!empty($params['category_id'])) {
-            $storeParams->criteria(
-                GO_Base_Db_FindCriteria::newInstance()
-                    ->addCondition('category_id', $params['category_id']));
+        if (empty($params['category_id'])) {
+            $category = GO_Cticket_Model_Category::model()->find(
+                GO_Base_Db_FindParams::newInstance()->single()
+            );
+            $params['category_id'] = $category->id;
         }
+
+        $storeParams->criteria(
+            GO_Base_Db_FindCriteria::newInstance()
+                ->addCondition('category_id', $params['category_id']));
 		
 		$multiSel = new GO_Base_Component_MultiSelectGrid(
 						'no-multiselect-status', 

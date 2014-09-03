@@ -63,6 +63,10 @@ class GO_Cticket_Model_TicketStatus extends GO_Base_Db_ActiveRecord {
                 'type'=>self::BELONGS_TO, 
                 'model'=>'GO_Cticket_Model_Status', 
                 'field'=>'status_id'),
+            'user' => array(
+                'type'=>self::BELONGS_TO, 
+                'model'=>'GO_Base_Model_User', 
+                'field'=>'user_id'),
         );
 	}
 }

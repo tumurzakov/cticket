@@ -19,3 +19,6 @@ $l["status"]="Статус";
 $l["statuses"]="Статусы";
 $l["template"]="Шаблон";
 $l["sendEmail"]="Оповещать по email";
+$l["sent"]="Отправлено";
+$l["draft"]="Черновик";
+$l["manager"]="Менеджер";

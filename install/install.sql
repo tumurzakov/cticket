@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `ct_ticket_statuses` (
   `email_account_id` int(11) NOT NULL,
   `email_sent` int(11) NOT NULL,
   `ctime` int(11) NOT NULL DEFAULT '0',
+  `user_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

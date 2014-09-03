@@ -100,25 +100,27 @@ class GO_Cticket_Controller_Ticket extends GO_Base_Controller_AbstractModelContr
         $stmt = $model->statuses;
         while($status = $stmt->fetch()) {
             $response['data']['statuses'][] = array(
+                'folder_id'=>$status->ticket->files_folder_id,
                 'status'=>$status->status->name,
                 'email_uid'=>$status->email_uid,
                 'email_mailbox'=>$status->email_mailbox,
                 'account_id'=>$status->email_account_id,
-                'created'=>strftime("%F %T", $status->ctime),
-                'sent'=>$status->email_sent
+                'created'=>date(GO::user()->completeDateFormat, $status->ctime) . ' ' . date(GO::user()->time_format, $status->ctime),
+                'sent'=>$status->email_sent,
+                'user'=>$status->user->name,
+                'category'=>$status->status->category->name,
             );
         }
 		return parent::beforeDisplay($response, $model, $params);
     }
 
     private function sendEmail($template, $model) {
-        $user_id = $_SESSION['GO_SESSION']['user_id'];
 		$account = GO_Email_Model_Account::model()->find(
             GO_Base_Db_FindParams::newInstance()
                 ->single()
 				->criteria(
                     GO_Base_Db_FindCriteria::newInstance()
-                        ->addCondition('user_id', $user_id)
+                        ->addCondition('user_id', GO::user()->id)
                 )
         );
 
@@ -166,6 +168,7 @@ class GO_Cticket_Controller_Ticket extends GO_Base_Controller_AbstractModelContr
         $ticketStatus->setAttributes(array(
             "ticket_id" => $model->id,
             "status_id" => $model->status_id,
+            "user_id" => GO::user()->id,
             "email_sent" => 0,
             "email_uid" => @$email['uid'],
             "email_mailbox" =>@$email['mailbox'],

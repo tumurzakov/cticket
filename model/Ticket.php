@@ -98,8 +98,8 @@ class GO_Cticket_Model_Ticket extends GO_Base_Db_ActiveRecord {
 
 	protected function getCacheAttributes() {
 		return array(
-				'name' => $this->name,
-				'description'=>"{$this->category->name} // {$this->status->name}"
+            'name' => $this->name,
+            'description'=>"{$this->category->name} // {$this->status->name}"
 		);
 	}
 	

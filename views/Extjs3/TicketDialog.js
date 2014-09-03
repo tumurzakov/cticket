@@ -87,6 +87,10 @@ GO.cticket.TicketDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 				allowBlank:false,
 				fieldLabel: GO.cticket.lang.sendEmail
             }, this.selectLinkField,
+            this.selectUser = new GO.form.SelectUser({
+                fieldLabel : GO.cticket.lang.manager,
+                anchor : '100%'
+            }),
 			this.contentField = new Ext.form.TextArea({
 				name: 'content',
 				anchor: '100%',
@@ -95,7 +99,23 @@ GO.cticket.TicketDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 			})]				
 		});
 
+        this.selectCategory.on('select', function() {
+            this.loadStatuses();
+        }, this);
+
+        this.selectStatus.store.on('load', function(store, records) {
+            if (records.length > 0) {
+                this.selectStatus.setValue(records[0].id);
+            }
+        }, this);
+
 		this.addPanel(this.propertiesPanel);
-	}
+	},
+
+    loadStatuses: function(category_id) {
+        this.selectStatus.setRawValue("");
+        this.selectStatus.store.baseParams.category_id = this.selectCategory.getValue();
+        this.selectStatus.store.load();
+    }
 	
 });
