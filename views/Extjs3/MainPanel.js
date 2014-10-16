@@ -21,7 +21,7 @@ GO.cticket.MainPanel = function(config){
 
 	this.centerPanel = new GO.cticket.CticketGrid({
 		region:'center',
-		id:'no-center-panel',
+		id:'ct-center-panel',
 		border:true
 	});
 	
@@ -86,6 +86,7 @@ GO.cticket.MainPanel = function(config){
 
     this.westPanel = new Ext.Panel({
         width: 210,
+        id: 'ct-west-panel',
         region: 'west',
         layout: 'fit',
         items: [{
@@ -104,7 +105,7 @@ GO.cticket.MainPanel = function(config){
 	
 	this.eastPanel = new GO.cticket.TicketPanel({
 		region:'east',
-		id:'no-east-panel',
+		id:'ct-east-panel',
 		width:440,
 		collapsible:true,
 		collapseMode:'mini',
@@ -168,10 +169,17 @@ GO.cticket.MainPanel = function(config){
 				this.statusesDialog.show();
 			},
 			scope: this
-				
-		}
-		]
-		});
+		},{
+			iconCls: 'ct-btn-kpi',
+			text: GO.cticket.lang.kpi,
+			cls: 'x-btn-text-icon',
+			handler: function(){
+                var report = new GO.cticket.KpiReport();
+                report.show();
+			},
+			scope: this
+		}]
+	});
 
 	config.items=[
 	this.westPanel,

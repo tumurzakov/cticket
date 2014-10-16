@@ -47,6 +47,15 @@ GO.cticket.TicketPanel = Ext.extend(GO.DisplayPanel,{
 						'<td>'+GO.cticket.lang.status+':</td>'+
 						'<td>{status}</td>'+
 					'</tr>'+
+                    (GO.orders ?
+					'<tr>'+
+						'<td>'+GO.orders.lang.cost_price+':</td>'+
+						'<td>{cost_price}</td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td>'+GO.orders.lang.sell_price+':</td>'+
+						'<td>{sell_price}</td>'+
+					'</tr>' : "" ) +
 					'<tr>'+
 						'<td colspan="2" class="display-panel-heading">{content}</td>'+
 					'</tr>'+

@@ -1,3 +1,6 @@
+modules/cticket/views/Extjs3/Stores.js
+modules/cticket/views/Extjs3/SelectCategory.js
+
 modules/cticket/views/Extjs3/CategoriesGrid.js
 modules/cticket/views/Extjs3/StatusesGrid.js
 
@@ -13,5 +16,6 @@ modules/cticket/views/Extjs3/StatusDialog.js
 modules/cticket/views/Extjs3/ManageStatusesGrid.js
 modules/cticket/views/Extjs3/ManageStatusDialog.js
 
-modules/cticket/views/Extjs3/Stores.js
+modules/cticket/views/Extjs3/KpiReport.js
+
 modules/cticket/views/Extjs3/MainPanel.js

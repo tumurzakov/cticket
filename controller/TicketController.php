@@ -111,6 +111,19 @@ class GO_Cticket_Controller_Ticket extends GO_Base_Controller_AbstractModelContr
                 'category'=>$status->status->category->name,
             );
         }
+
+        if(GO::modules()->isAvailable('orders')) {
+            $response['data']['cost_price'] = 0;
+            $response['data']['sell_price'] = 0;
+            $stmt = GO_Orders_Model_Order::model()->findLinks($model);
+            while($link = $stmt->fetch()) {
+                if ($link->active) {
+                    $response['data']['cost_price'] += $link->cost_price;
+                    $response['data']['sell_price'] += $link->sell_price;
+                }
+            }
+        }
+
 		return parent::beforeDisplay($response, $model, $params);
     }
 
@@ -175,5 +188,42 @@ class GO_Cticket_Controller_Ticket extends GO_Base_Controller_AbstractModelContr
             "email_account_id" =>@$email['account_id'],
         ));
         $ticketStatus->save();
+    }
+
+    protected function actionKpi(&$params) {
+        $from = strtotime($params['from']);
+        $to = strtotime($params['to']);
+        $category_id = intval($params['category_id']);
+        $user_id = intval($params['user_id']);
+
+        $criteria = GO_Base_Db_FindCriteria::newInstance()
+            ->addCondition('ctime', $from, '>=')
+            ->addCondition('ctime', $to, '<');
+
+        if (!empty($user_id)) $criteria->addCondition('user_id', $user_id);
+        if (!empty($category_id)) $criteria->addCondition('category_id', $category_id);
+
+        $stmt = GO_Cticket_Model_Ticket::model()->find(
+            GO_Base_Db_FindParams::newInstance()
+                ->ignoreAcl()
+                ->select('t.user_id, t.status_id, count(*) as cnt')
+                ->group(array("t.user_id", "t.status_id"))
+				->criteria($criteria)
+        );
+
+        $pre = array();
+        while($row = $stmt->fetch()) {
+            if (!isset($pre[$row->user_id])) {
+                $user = GO_Base_Model_User::model()->findByPk($row->user_id);
+                $pre[$row->user_id] = array('name'=>$user->name, 'statuses'=>array());
+            }
+
+            $status = GO_Cticket_Model_Status::model()->findByPk($row->status_id);
+            $pre[$row->user_id]['statuses'][] = array(
+                'status'=>$status->name, 'count'=>$row->cnt
+            );
+        }
+
+        return array('users'=>array_values($pre));
     }
 }

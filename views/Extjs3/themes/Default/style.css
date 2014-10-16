@@ -17,3 +17,27 @@
 .ct-btn-statuses{
 	background-image: url('images/gtk-settings.png') !important;
 }
+
+.ct-btn-kpi {
+	background-image: url('images/kpi.png') !important;
+}
+
+.ct-kpi-report {
+    height: 400px;
+    overflow: auto;
+}
+
+.ct-kpi {
+    margin: 10px;
+    width: 90%;
+}
+
+.ct-kpi td {
+    padding: 5px;
+    font-size: 1.3em;
+    border-bottom: 1px solid #ccc;
+}
+
+.ct-kpi-user {
+    background: #eee;
+}
