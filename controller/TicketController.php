@@ -161,6 +161,13 @@ class GO_Cticket_Controller_Ticket extends GO_Base_Controller_AbstractModelContr
             }
         }
 
+        $stmt = GO_Addressbook_Model_Contact::model()->findLinks($model);
+        while($contact = $stmt->fetch()) {
+            if ($contact->email) {
+                $recipients[$contact->email] = $contact->name;
+            }
+        }
+
         $message->setTo($recipients);
 
 		$imap = $account->openImapConnection($account->drafts);
