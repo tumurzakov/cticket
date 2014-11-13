@@ -17,7 +17,7 @@
  * 
  * The Status model
  * 
- * @property String $name The name of the category
+ * @property String $name The name of the status
  * @property int $user_id
  */
 class GO_Cticket_Model_Status extends GO_Base_Db_ActiveRecord {
@@ -39,16 +39,12 @@ class GO_Cticket_Model_Status extends GO_Base_Db_ActiveRecord {
 	
 	public function relations() {
 		return array(
-            'tickets' => array(
-                'type' => self::HAS_MANY, 
-                'model' => 'GO_Cticket_Model_Ticket', 
-                'field' => 'status_id', 
-                'delete' => true),
-            'category' => array(
-                'type'=>self::BELONGS_TO, 
-                'model'=>'GO_Cticket_Model_Category', 
-                'field'=>'category_id'),
-        );
+			'tickets' => array(
+				'type' => self::HAS_MANY, 
+				'model' => 'GO_Cticket_Model_Ticket', 
+				'field' => 'status_id', 
+				'delete' => true),
+		);
 	}
 
 	protected function init() {

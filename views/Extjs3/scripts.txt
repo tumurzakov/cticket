@@ -1,16 +1,10 @@
 modules/cticket/views/Extjs3/Stores.js
-modules/cticket/views/Extjs3/SelectCategory.js
 
-modules/cticket/views/Extjs3/CategoriesGrid.js
 modules/cticket/views/Extjs3/StatusesGrid.js
 
 modules/cticket/views/Extjs3/TicketGrid.js
 modules/cticket/views/Extjs3/TicketDialog.js
 modules/cticket/views/Extjs3/TicketPanel.js
-
-modules/cticket/views/Extjs3/CategoryDialog.js
-modules/cticket/views/Extjs3/ManageCategoriesGrid.js
-modules/cticket/views/Extjs3/ManageCategoryDialog.js
 
 modules/cticket/views/Extjs3/StatusDialog.js
 modules/cticket/views/Extjs3/ManageStatusesGrid.js

@@ -17,7 +17,6 @@
  * The Ticket model
  * 
  * @property int $id
- * @property int $category_id
  * @property int $files_folder_id
  * @property string $content
  * @property string $name

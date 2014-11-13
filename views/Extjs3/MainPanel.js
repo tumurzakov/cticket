@@ -25,32 +25,8 @@ GO.cticket.MainPanel = function(config){
 		border:true
 	});
 	
-    this.categoriesPanel = new GO.cticket.CategoriesGrid({
-        region: 'north',
-        height: 200,
-		id:'ct-multiselect-categories',
-		title:GO.cticket.lang.categories,
-		loadMask:true,
-		store: GO.cticket.readableCategoriesStore,
-		width: 210,
-		split:true,
-		allowNoSelection:true,
-		collapsible:true,
-		collapseMode:'mini',
-		bbar: new GO.SmallPagingToolbar({
-			items:[this.searchField = new GO.form.SearchField({
-				store: GO.cticket.readableCategoriesStore,
-				width:120,
-				emptyText: GO.lang.strSearch
-			})],
-			store:GO.cticket.readableCategoriesStore,
-			pageSize:GO.settings.config.nav_page_size
-		}),
-		relatedStore: this.centerPanel.store
-	});
-
-    this.statusesPanel = new GO.cticket.StatusesGrid({
-        region: 'center',
+	this.statusesPanel = new GO.cticket.StatusesGrid({
+		region: 'center',
 		id:'ct-multiselect-statuses',
 		title:GO.cticket.lang.statuses,
 		loadMask:true,
@@ -71,29 +47,13 @@ GO.cticket.MainPanel = function(config){
 		relatedStore: this.centerPanel.store
 	});
 
-    this.categoriesPanel.on('rowclick', function(grid, rowIndex, e) {
-        var record = grid.store.getAt(rowIndex);
-        this.statusesPanel.store.baseParams.category_id = record.get('id');
-        this.statusesPanel.store.reload();
-    }, this);
-
-    this.categoriesPanel.store.on('load', function(store, records, e) {
-        if (records.length > 0) {
-            this.statusesPanel.store.baseParams.category_id = records[0].get('id');
-            this.statusesPanel.store.reload();
-        }
-    }, this);
-
-    this.westPanel = new Ext.Panel({
-        width: 210,
-        id: 'ct-west-panel',
-        region: 'west',
-        layout: 'fit',
-        items: [{
-            layout: 'border',
-            items: [this.categoriesPanel, this.statusesPanel]
-        }]
-    });
+	this.westPanel = new Ext.Panel({
+		width: 250,
+		id: 'ct-west-panel',
+		region: 'west',
+		layout: 'fit',
+		items: [ this.statusesPanel ]
+	});
 
 	this.centerPanel.on("delayedrowselect",function(grid, rowIndex, r){
 		this.eastPanel.load(r.data.id);		
@@ -121,9 +81,6 @@ GO.cticket.MainPanel = function(config){
 				this.eastPanel.reset();
 
 				GO.cticket.showTicketDialog(0, {
-						loadParams:{
-							category_id: b.buttonParams.id						
-						}
 				});
 			},
 			scope: this
@@ -135,22 +92,6 @@ GO.cticket.MainPanel = function(config){
 					callback : this.eastPanel.gridDeleteCallback,
 					scope: this.eastPanel
 				});
-			},
-			scope: this
-		},{
-			iconCls: 'ct-btn-categories',
-			text: GO.cticket.lang.manageCategories,
-			cls: 'x-btn-text-icon',
-			handler: function(){
-				if(!this.categoriesDialog)
-				{
-					this.categoriesDialog = new GO.cticket.ManageCategoriesDialog();
-					this.categoriesDialog.on('change', function(){
-						this.categoriesPanel.store.reload();
-						GO.cticket.writableCategoriesStore.reload();
-					}, this);
-				}
-				this.categoriesDialog.show();
 			},
 			scope: this
 		},{
@@ -174,8 +115,8 @@ GO.cticket.MainPanel = function(config){
 			text: GO.cticket.lang.kpi,
 			cls: 'x-btn-text-icon',
 			handler: function(){
-                var report = new GO.cticket.KpiReport();
-                report.show();
+				var report = new GO.cticket.KpiReport();
+				report.show();
 			},
 			scope: this
 		}]
@@ -202,7 +143,7 @@ Ext.extend(GO.cticket.MainPanel, Ext.Panel, {
 			}
 		});
 
-		GO.cticket.readableCategoriesStore.load();
+		GO.cticket.readableStatusesStore.load();
 		
 		GO.cticket.MainPanel.superclass.afterRender.call(this);
 	}
@@ -213,7 +154,11 @@ GO.cticket.showTicketDialog = function(ticket_id, config){
 	if(!GO.cticket.ticketDialog)
 		GO.cticket.ticketDialog = new GO.cticket.TicketDialog();
 	
-	GO.cticket.ticketDialog.show(ticket_id, config);
+	if (ticket_id > 0) {
+		GO.cticket.ticketDialog.show(ticket_id, config);
+	} else {
+		GO.cticket.ticketDialog.show();
+	}
 }
 
 

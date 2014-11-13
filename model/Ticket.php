@@ -17,7 +17,6 @@
  * The Ticket model
  * 
  * @property int $id
- * @property int $category_id
  * @property int $files_folder_id
  * @property string $content
  * @property string $name
@@ -44,17 +43,12 @@ class GO_Cticket_Model_Ticket extends GO_Base_Db_ActiveRecord {
 	protected function init() {
 		
 		$this->columns['name']['required']=true;
-		$this->columns['category_id']['required']=true;
 		
 		return parent::init();
 	}
 	
 	public function getLocalizedName(){
 		return GO::t('ticket','tickets');
-	}
-	
-	public function aclField(){
-		return 'category.acl_id';	
 	}
 	
 	public function tableName(){
@@ -73,33 +67,26 @@ class GO_Cticket_Model_Ticket extends GO_Base_Db_ActiveRecord {
 
 	public function relations(){
 		return array(	
-            'category' => array(
-                'type'=>self::BELONGS_TO, 
-                'model'=>'GO_Cticket_Model_Category', 
-                'field'=>'category_id'),
-            'status' => array(
-                'type'=>self::BELONGS_TO, 
-                'model'=>'GO_Cticket_Model_Status', 
-                'field'=>'status_id'),
-            'statuses' => array(
-                'type'=>self::HAS_MANY,
-                'model'=>'GO_Cticket_Model_TicketStatus', 
-                'field'=>'ticket_id'),
-        );
+			'status' => array(
+				'type'=>self::BELONGS_TO, 
+				'model'=>'GO_Cticket_Model_Status', 
+				'field'=>'status_id'),
+			'statuses' => array(
+				'type'=>self::HAS_MANY,
+				'model'=>'GO_Cticket_Model_TicketStatus', 
+				'field'=>'ticket_id'),
+		);
 	}
 
 	public function defaultAttributes() {
 		$attr = parent::defaultAttributes();
-		
-		$attr['category_id']=1;
-		
 		return $attr;
-    }
+	}
 
 	protected function getCacheAttributes() {
 		return array(
-            'name' => $this->name,
-            'description'=>"{$this->category->name} // {$this->status->name}"
+			'name' => $this->name,
+			'description'=>"{$this->status->name}"
 		);
 	}
 	
@@ -107,8 +94,8 @@ class GO_Cticket_Model_Ticket extends GO_Base_Db_ActiveRecord {
 	 * The files module will use this function.
 	 */
 	public function buildFilesPath() {
-		return 'cticket/' . GO_Base_Fs_Base::stripInvalidChars($this->category->name) . 
-            '/' . date('Y', $this->ctime) . 
-            '/' . GO_Base_Fs_Base::stripInvalidChars($this->name).' ('.$this->id.')';
+		return 'cticket/' . 
+			'/' . date('Y', $this->ctime) . 
+			'/' . GO_Base_Fs_Base::stripInvalidChars($this->name).' ('.$this->id.')';
 	}
 }

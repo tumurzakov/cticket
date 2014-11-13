@@ -35,26 +35,11 @@ GO.cticket.StatusDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 			autoScroll:true,
 			items:[{
 				xtype: 'textfield',
-			    name: 'name',
+				name: 'name',
 				anchor: '100%',
-			    allowBlank:false,
-			    fieldLabel: GO.lang.strName
-            }, this.selectCategory = new GO.form.ComboBox({
-				fieldLabel: GO.cticket.lang.category_id,
-				hiddenName:'category_id',
-				anchor:'100%',
-				emptyText:GO.lang.strPleaseSelect,
-				store: GO.cticket.writableCategoriesStore,
-				pageSize: parseInt(GO.settings.max_rows_list),
-				valueField:'id',
-				displayField:'name',
-				mode: 'remote',
-				triggerAction: 'all',
-				editable: true,
-				selectOnFocus:true,
-				forceSelection: true,
-				allowBlank: false
-            }), this.selectTemplate = new GO.form.ComboBox({
+				allowBlank:false,
+				fieldLabel: GO.lang.strName
+			}, this.selectTemplate = new GO.form.ComboBox({
 				fieldLabel: GO.cticket.lang.template,
 				hiddenName:'template_id',
 				anchor:'100%',
@@ -69,8 +54,13 @@ GO.cticket.StatusDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 				selectOnFocus:true,
 				forceSelection: true,
 				allowBlank: false
-			})
-            ]
+			}), {
+				xtype: 'numberfield',
+				name: 'position',
+				anchor: '100%',
+				fieldLabel: GO.cticket.lang.position
+			}
+			]
 				
 		});
 

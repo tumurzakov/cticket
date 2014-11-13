@@ -40,10 +40,6 @@ GO.cticket.TicketPanel = Ext.extend(GO.DisplayPanel,{
 						'<td>{id}</td>'+
 					'</tr>'+
 					'<tr>'+
-						'<td>'+GO.cticket.lang.category+':</td>'+
-						'<td>{category}</td>'+
-					'</tr>'+
-					'<tr>'+
 						'<td>'+GO.cticket.lang.status+':</td>'+
 						'<td>{status}</td>'+
 					'</tr>'+
@@ -64,7 +60,6 @@ GO.cticket.TicketPanel = Ext.extend(GO.DisplayPanel,{
                             '<table>' +
                                 '<tpl for="statuses">'+
                                     '<tr>' + 
-                                        '<td>{category}</td>' + 
                                         '<td>{status}</td>' + 
                                         '<td>'+
 								            '<tpl if="!GO.util.empty(email_uid)">'+

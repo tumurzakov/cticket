@@ -26,7 +26,7 @@ GO.cticket.CticketGrid = function(config){
 		root: 'results',
 		id: 'id',
 		totalProperty:'total',
-		fields: ['id','category','status','user_name','ctime','mtime','name','content'],
+		fields: ['id','status','user_name','ctime','mtime','name','content'],
 		remoteSort: true,
 		model:"GO_Cticket_Model_Ticket"
 	});
@@ -46,11 +46,6 @@ GO.cticket.CticketGrid = function(config){
 		{
 			header: GO.lang.strName,
 			dataIndex: 'name',
-			sortable: true
-		},
-		{
-			header: GO.cticket.lang.category,
-			dataIndex: 'category',
 			sortable: true
 		},
 		{

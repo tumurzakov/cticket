@@ -25,3 +25,4 @@ $l["kpi"] = "KPI";
 $l["from"] = "Период с";
 $l["to"] = "Период по";
 $l["report"] = "Отчет";
+$l["position"] = "Position";

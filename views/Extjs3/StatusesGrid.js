@@ -1,7 +1,7 @@
 GO.cticket.StatusesGrid = function(config) {
-    if (!config) {
-        config = {};
-    }
+	if (!config) {
+		config = {};
+	}
 
 	GO.cticket.StatusesGrid.superclass.constructor.call(this, config);
 }
@@ -9,15 +9,15 @@ GO.cticket.StatusesGrid = function(config) {
 Ext.extend(GO.cticket.StatusesGrid, GO.grid.MultiSelectGrid , {
 	initComponent : function(){
 		GO.cticket.StatusesGrid.superclass.initComponent.call(this);	
-    },
-    getColumns : function() {
+	},
+	getColumns : function() {
 		var columns = GO.cticket.StatusesGrid.superclass.getColumns.call(this);	
-        columns.push({
+		columns.push({
 			header: '#',
 			dataIndex: 'count',
-            align: 'right',
+			align: 'right',
 			id:'count'
-        });
-        return columns;
-    }
+		});
+		return columns;
+	}
 });
