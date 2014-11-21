@@ -157,7 +157,7 @@ GO.cticket.showTicketDialog = function(ticket_id, config){
 	if (ticket_id > 0) {
 		GO.cticket.ticketDialog.show(ticket_id, config);
 	} else {
-		GO.cticket.ticketDialog.show();
+		GO.cticket.ticketDialog.show(0, config);
 	}
 }
 
